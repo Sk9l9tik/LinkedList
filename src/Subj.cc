@@ -5,36 +5,39 @@
 namespace SubJList {
 	using namespace LinkedList;
 	//Base
-	void Base::print() const {
-		//std::cout << (type_ == NodeType::thread) << std::endl;
-		if (type_ == NodeType::process) {
-			((Process*)this)->print();
-		}
-		else if (type_ == NodeType::thread)
-			((Thread*)this)->print();
-		else
-			return;
-		return;
-	}
+	//void Base::print() const {
+	//	//std::cout << (type_ == NodeType::thread) << std::endl;
+	//	if (type_ == NodeType::process) {
+	//		((Process*)this)->print();
+	//	}
+	//	else if (type_ == NodeType::thread)
+	//		((Thread*)this)->print();
+	//	else
+	//		return;
+	//	return;
+	//}
 
 
-	void Base::input() {
-		if (type_ == NodeType::process) {
-			((Process*)this)->input();
-		}
-		else if(type_ == NodeType::thread)
-			((Thread*)this)->input();
-	}
+	//void Base::input() {
+	//	if (type_ == NodeType::process) {
+	//		((Process*)this)->input();
+	//	}
+	//	else if(type_ == NodeType::thread)
+	//		((Thread*)this)->input();
+	//}
+
 
 	Base* Base::create(NodeType type){
 		Base* node = nullptr;
 		if (type == NodeType::process) {
-			node = (Base*)new Process;
+			node = (Base*) new Process;
 			node->set_type(NodeType::process);
+			node->input();
 		}
 		else if (type == NodeType::thread) {
-			node = (Base*)new Thread;
+			node = (Base*) new Thread;
 			node->set_type(NodeType::thread);
+			node->input();
 		}
 		return node;
 	}
@@ -68,7 +71,7 @@ namespace SubJList {
 
 
 	//SubjList
-	void SubjList::print() {
+	void SubjList::print() const {
 		Base* node = (Base*)head_;
 
 		if (!node)

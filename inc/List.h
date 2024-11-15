@@ -74,7 +74,7 @@ namespace LinkedList {
 		* @brief Print list (#i node ...)
 		* @param (none)
 		*/
-		void print();
+		virtual void print() const;
 
 		/**
 		* @brief Check list for emptiness.

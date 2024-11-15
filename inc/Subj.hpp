@@ -39,13 +39,13 @@ namespace SubJList {
 		void set_type(NodeType type) { type_ = type; }
 
 		/// Fuction to input firlds in base node
-		void input();
+		virtual void input() = 0;
 	public:
 		/**
 		* @brief Type getter
 		* @return Type of node;
 		*/
-		NodeType type() { return type_; }
+		virtual NodeType type() = 0;
 		/**
 		* @brief Priority getter
 		* @return Node priority;
@@ -53,7 +53,7 @@ namespace SubJList {
 		int priority() { return priority_; }
 
 		/// Print node function
-		void print() const;
+		virtual void print() const = 0;
 	};
 
 	class Process final: public Base {
@@ -77,10 +77,13 @@ namespace SubJList {
 		int size() { return size_; }
 
 		/// Print node function
-		void print() const;
+		void print() const override;
 
 		/// Fuction to input firlds in base node
-		void input();		
+		void input() override;	
+
+		///
+		NodeType type() override { return NodeType::process; }
 	};
 
 	class Thread final : public Base {
@@ -96,11 +99,14 @@ namespace SubJList {
 		*/
 		int parentpid() { return parentPID_; }
 
+		///
+		NodeType type() override { return NodeType::thread; }
+		
 		/// Print node function
-		void print() const;
+		void print() const override;
 	public:
 		/// Fuction to input firlds in base node
-		void input();
+		void input() override;
 
 		///@brief Fubction set parentpid
 		void set_parentpid(int parentpid) { parentPID_ = parentpid; }
@@ -110,7 +116,7 @@ namespace SubJList {
 	class SubjList final : public LinkedList::List {
 	public:
 		/// Print SubjList function
-		void print();
+		void print() const override;
 
 		/**
 		* @brief Find process in List by his PID

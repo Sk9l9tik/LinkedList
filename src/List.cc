@@ -41,7 +41,7 @@ namespace LinkedList {
 		return size;
 	}
 
-	void List::print() {
+	void List::print() const{
 		Node* t = head_;
 		std::cout << "List:" << this << "\t head:" << head_ << "\ttail:" << tail_ << "\n";
 		std::cout << "#\tNode\t\t prev\t\t next\n";
