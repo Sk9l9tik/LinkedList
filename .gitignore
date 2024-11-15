@@ -4,3 +4,4 @@ build_linux/
 *.out
 *.exe
 .vs/
+*.7z

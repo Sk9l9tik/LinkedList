@@ -54,14 +54,14 @@ namespace LinkedList {
 		* @param index Index of node. If index > size list return nullptr.
 		* @return Pointer to Node
 		*/
-		Node* get_node(int index);
+		Node* get_node(int index) const;
 
 		/**
 		* @brief Get index of node by pointer.
 		* @param node Pointer to node.
 		* @return Index of node.
 		*/
-		int get_index(Node* node) ;
+		int get_index(Node* node) const;
 
 		/**
 		* @brief Get size of list.

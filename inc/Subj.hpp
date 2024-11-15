@@ -28,32 +28,47 @@ namespace SubJList {
 	public:
 		/**
 		* @brief Memory allocator by type.
-		* @param[in] type type of Base Node
+		* @param[in] type type of Base Node.
 		* @return Base poiner
 		*/
 		static Base* create(NodeType type);
 		/** 
-		* @brief Setter by type field
-		* @param Type of node
+		* @brief Setter by type field.
+		* @param Type of node.
 		*/
 		void set_type(NodeType type) { type_ = type; }
 
-		/// Fuction to input firlds in base node
+		/// Fuction to input firlds in base node.
 		virtual void input() = 0;
 	public:
 		/**
-		* @brief Type getter
-		* @return Type of node;
+		* @brief Type getter.
+		* @return Type of node.
 		*/
-		virtual NodeType type() = 0;
+		virtual NodeType type() const = 0;
 		/**
-		* @brief Priority getter
-		* @return Node priority;
+		* @brief Priority getter.
+		* @return Node priority.
 		*/
-		int priority() { return priority_; }
+		int priority() const { return priority_; }
 
-		/// Print node function
+		/// Print node function.
 		virtual void print() const = 0;
+	public:
+		
+		/**
+		* @brief Overloaded operator >. This copmares priority fields of 2 nodes.
+		* @param[in] rhs Reference to Base type Node.
+		* @return bool value.
+		*/
+		bool operator>(Base& rhs);
+		
+		/**
+		* @brief Overloaded operator >. This copmares priority node and param rhs value.
+		* @param[in] rhs Reference to int value of priority.
+		* @return bool value.
+		*/
+		bool operator>(int& rhs);
 	};
 
 	class Process final: public Base {
@@ -65,25 +80,25 @@ namespace SubJList {
 		Process(int PID, int size) : PID_(PID), size_(size) {}
 	public:
 		/**
-		* @brief PID getter
+		* @brief PID getter.
 		* @return Process pid;
 		*/
-		int pid() { return PID_; }
+		int pid() const { return PID_; }
 
 		/**
-		* @brief Size getter
-		* @return Size of process;
+		* @brief Size getter.
+		* @return Size of process.
 		*/
-		int size() { return size_; }
+		int size() const { return size_; }
 
 		/// Print node function
 		void print() const override;
 
-		/// Fuction to input firlds in base node
+		/// Fuction to input firlds in base node.
 		void input() override;	
 
-		///
-		NodeType type() override { return NodeType::process; }
+		/// Fucntion returned type of Node. @return NodeType::process.
+		NodeType type() const override { return NodeType::process; }
 	};
 
 	class Thread final : public Base {
@@ -94,51 +109,55 @@ namespace SubJList {
 		Thread(int parentPID) : parentPID_(parentPID) {};
 	public:
 		/**
-		* @brief Parent PID getter
-		* @return Parent PID of thread;
+		* @brief Parent PID getter.
+		* @return Parent PID of thread.
 		*/
-		int parentpid() { return parentPID_; }
+		int parentpid() const { return parentPID_; }
 
-		///
-		NodeType type() override { return NodeType::thread; }
+		/// Fucntion returned type of Node.  @return NodeType::thread.
+		NodeType type() const override { return NodeType::thread; }
 		
-		/// Print node function
+		/// Print node function.
 		void print() const override;
 	public:
-		/// Fuction to input firlds in base node
+		/// Fuction to input fields in base node.
 		void input() override;
 
-		///@brief Fubction set parentpid
+		/**
+		* @brief Function set parent pid.
+		* @param[in] parentpid Parent pid of Thread.
+		*/
 		void set_parentpid(int parentpid) { parentPID_ = parentpid; }
-		
+	public:
+
 	};
 
 	class SubjList final : public LinkedList::List {
 	public:
-		/// Print SubjList function
+		/// Print SubjList function.
 		void print() const override;
 
 		/**
-		* @brief Find process in List by his PID
-		* @param[in] Process PID
-		* @return Pointer to Process Node
+		* @brief Find process in List by his PID.
+		* @param[in] Process PID.
+		* @return Pointer to Process Node.
 		*/
-		Process* find_process_by_PID(int PID);
+		Process* find_process_by_PID(int PID) const;
 		
 		/**
-		* @brief Count child thread by parent PID
-		* @param[in] Thread parent PID
-		* @return Count of chield threads
+		* @brief Count child thread by parent PID.
+		* @param[in] Thread parent PID.
+		* @return Count of chield threads.
 		*/
-		int count_child_threads(int parentPID);
+		int count_child_threads(int parentPID) const;
 
 		/**
-		* @brief Count child thread by parent PID after node in list
-		* @param[in] Base node pointer to node after his find count child threads
-		* @param[in] Thread parent PID
-		* @return Count of chield threads after node
+		* @brief Count child thread by parent PID after node in list.
+		* @param[in] Base node pointer to node after his find count child threads.
+		* @param[in] Thread parent PID.
+		* @return Count of chield threads after node.
 		*/
-		int count_child_threads_after_node(Base* node, int parentPID);
+		int count_child_threads_after_node(Base* node, int parentPID) const;
 	
 	public:
 
@@ -157,25 +176,32 @@ namespace SubJList {
 		void delete_node(int index);
 
 		/**
-		* @brief Sort process in list by priority
-		* @param[in] Poinert to unsorted node
-		* @return Pointer to sorted process
+		* @brief Sort process in list by priority.
+		* @param[in] Poinert to unsorted node.
+		* @return Pointer to sorted process.
 		*/
 		Base* sort_process(Base* node);
 		
 		/**
-		* @brief Sort threads in list by priority
-		* @param[in] Poinert to unsorted node
-		* @param[in] Thread parent PID
-		* @return Pointer to sorted thread
+		* @brief Sort threads in list by priority.
+		* @param[in] Poinert to unsorted node.
+		* @param[in] Thread parent PID.
+		* @return Pointer to sorted thread.
 		*/
 		Base* sort_threads(Base* node, int parentPID);
 
 		/**
-		* @brief Sort List by priority process and threads
+		* @brief Sort List by priority process and threads.
 		*/
 		void sort_by_priority();
-
+	public:
+		/**
+		* @brief Overload operator [].
+		* @param[in] index Index of node in list.
+		* @return Reference to Node in index position on list.
+		* @warning If index goes beyond of list throw the std::out_of_range exception
+		*/
+		Base& operator[](int index) const ;
 	};
 }
 

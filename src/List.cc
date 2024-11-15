@@ -7,7 +7,7 @@ namespace LinkedList {
 		this->clear();
 	}
 
-	Node* List::get_node(int index) {
+	Node* List::get_node(int index) const  {
 		int i = 0;
 		if (index < 0 || !head_) return nullptr;
 
@@ -19,7 +19,7 @@ namespace LinkedList {
 		return t;
 	}
 	
-	int List::get_index(Node* node) {
+	int List::get_index(Node* node) const {
 		if (!node) return -1;
 
 		int i = 0;

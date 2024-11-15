@@ -5,61 +5,50 @@
 namespace SubJList {
 	using namespace LinkedList;
 	//Base
-	//void Base::print() const {
-	//	//std::cout << (type_ == NodeType::thread) << std::endl;
-	//	if (type_ == NodeType::process) {
-	//		((Process*)this)->print();
-	//	}
-	//	else if (type_ == NodeType::thread)
-	//		((Thread*)this)->print();
-	//	else
-	//		return;
-	//	return;
-	//}
-
-
-	//void Base::input() {
-	//	if (type_ == NodeType::process) {
-	//		((Process*)this)->input();
-	//	}
-	//	else if(type_ == NodeType::thread)
-	//		((Thread*)this)->input();
-	//}
-
-
-	Base* Base::create(NodeType type){
+	Base* Base::create(NodeType type) {
 		Base* node = nullptr;
 		if (type == NodeType::process) {
 			node = (Base*) new Process;
+			node->set_next_null();
+			node->set_prev_null();
 			node->set_type(NodeType::process);
 			node->input();
 		}
 		else if (type == NodeType::thread) {
 			node = (Base*) new Thread;
+			node->set_next_null();
+			node->set_prev_null();
 			node->set_type(NodeType::thread);
 			node->input();
 		}
 		return node;
 	}
 
+	bool Base::operator>(Base& rhs) {
+		return priority_ > rhs.priority();
+	}
+
+	bool Base::operator>(int& rhs) {
+		return priority_ > rhs;
+	}
+
 	//Process
 	void Process::print() const {
 		std::cout << "---\nProcess:\n";
-		std::cout << "Priority: " << priority_ << "\nPID: " << PID_ << "\nSize : " << size_<< " \nCreation time : " << creation_time_<< "\n";
+		std::cout << "Priority: " << priority_ << "\nPID: " << PID_ << "\nSize : " << size_ << " \nCreation time : " << creation_time_ << "\n";
 	}
 
 	void Process::input() {
 		std::cout << "Enter pritority:";
 		std::cin >> priority_;
 		static int PID_count = 0;
-		PID_= PID_count++;
+		PID_ = PID_count++;
 	}
-
 
 	//Thread
 	void Thread::print() const {
 		std::cout << "---\nThread:\n";
-		std::cout << "Priority: " << priority_<< "\nParent PID : " << parentPID_ << "\nCreation time : " << creation_time_<< "\n---\n";
+		std::cout << "Priority: " << priority_ << "\nParent PID : " << parentPID_ << "\nCreation time : " << creation_time_ << "\n---\n";
 	}
 
 	void Thread::input() {
@@ -77,13 +66,12 @@ namespace SubJList {
 		if (!node)
 			std::cout << "List is empty!!!\n";
 
-		while (node) {
-			node->print();
-			node = (Base*)node->pnext();
+		for (int i = 0, end = size(); i < end; i++) {
+			(*this)[i].print();
 		}
 	}
 
-	Process* SubjList::find_process_by_PID(int PID){
+	Process* SubjList::find_process_by_PID(int PID) const{
 		if (!head_) {
 			return nullptr;
 		}
@@ -95,9 +83,12 @@ namespace SubJList {
 		return tmp_process;
 	}
 
-	int SubjList::count_child_threads(int parentPID){
-		int count = 0;
+	int SubjList::count_child_threads(int parentPID) const{
+		if (!head_) {
+			return 0;
+		}
 
+		int count = 0;
 		Thread* tmp_thread = (Thread*)head_;
 		while (!tmp_thread) {
 			if (tmp_thread->parentpid() == parentPID)
@@ -107,7 +98,7 @@ namespace SubJList {
 		return count;
 	}
 
-	int SubjList::count_child_threads_after_node(Base* node, int parentPID){
+	int SubjList::count_child_threads_after_node(Base* node, int parentPID) const{
 		int count = 0;
 		Base* t = node;
 		while (t) {
@@ -123,9 +114,7 @@ namespace SubJList {
 
 	Base* SubjList::create(NodeType type) {
 		Base* created = Base::create(type);
-		created->input();
-		
-		if (created->type() == NodeType::process){
+		if (created->type() == NodeType::process) {
 			Base* t_thread = new Thread(((Process*)created)->pid());
 			t_thread->set_type(NodeType::thread);
 			((Thread*)t_thread)->print();
@@ -134,7 +123,7 @@ namespace SubJList {
 		return created;
 	}
 
-	void SubjList::delete_node(int index){
+	void SubjList::delete_node(int index) {
 		Base* tmp_base = (Base*)remove(index);
 
 		if (!tmp_base) {
@@ -179,7 +168,7 @@ namespace SubJList {
 		while (t) {
 			Base* tmp = t;
 			if (tmp->type() == NodeType::process) {
-				if (max_process_priority < tmp->priority()) {
+				if (*tmp > max_process_priority) {
 					max_process_priority = tmp->priority();
 					temp_max_process = tmp;
 				}
@@ -193,7 +182,7 @@ namespace SubJList {
 
 	}
 
-	Base* SubjList::sort_threads(Base* node, int parentPID){
+	Base* SubjList::sort_threads(Base* node, int parentPID) {
 		Base* t = node;
 		Base* tmp_max_thread = NULL;
 		int max_thread_priority = -21;
@@ -201,7 +190,7 @@ namespace SubJList {
 		while (t) {
 			Base* tmp = t;
 			if (tmp->type() == NodeType::thread && ((Thread*)tmp)->parentpid() == parentPID) {
-				if (max_thread_priority < tmp->priority()) {
+				if (*tmp > max_thread_priority) {
 					max_thread_priority = tmp->priority();
 					tmp_max_thread = tmp;
 				}
@@ -213,7 +202,7 @@ namespace SubJList {
 		return tmp_max_thread;
 	}
 
-	void SubjList::sort_by_priority(){
+	void SubjList::sort_by_priority() {
 		Node* t = head_;
 		/// main cycle in which sorting list
 		while (t && t->pnext()) {
@@ -229,5 +218,10 @@ namespace SubJList {
 			}
 			t = temp_last_thread;
 		}
+	}
+
+	Base& SubjList::operator[](int index) const {
+		if (index < 0 || index >= size()) throw std::out_of_range("List index out of range!!!!");
+		return *(Base*)get_node(index);
 	}
 }	
