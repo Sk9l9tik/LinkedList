@@ -3,18 +3,35 @@
 namespace SubJList {
 	using namespace LinkedList;
 	//Base
+	void Base::print() const {
+		if (type_ == NodeType::process) {
+			((Process*)this)->print();
+		}
+		else if (type_ == NodeType::thread)
+			((Thread*)this)->print();
+		else
+			return;
+		return;
+	}
+
+
+	void Base::input() {
+		if (type_ == NodeType::process) {
+			((Process*)this)->input();
+		}
+		else if(type_ == NodeType::thread)
+			((Thread*)this)->input();
+	}
 
 	Base* Base::create(NodeType type){
 		Base* node = nullptr;
 		if (type == NodeType::process) {
-			node = (Base*) new Process;
+			node = (Base*)new Process;
 			node->set_type(NodeType::process);
-			node->input();
 		}
 		else if (type == NodeType::thread) {
-			node = (Base*) new Thread;
+			node = (Base*)new Thread;
 			node->set_type(NodeType::thread);
-			node->input();
 		}
 		return node;
 	}
@@ -48,7 +65,7 @@ namespace SubJList {
 
 
 	//SubjList
-	void SubjList::print() const {
+	void SubjList::print() {
 		Base* node = (Base*)head_;
 
 		if (!node)
@@ -72,15 +89,15 @@ namespace SubJList {
 		return tmp_process;
 	}
 
-	int SubjList::count_child_threads(int parentPID) {
+	int SubjList::count_child_threads(int parentPID){
 		int count = 0;
 
 		Base* tmp_thread = (Base*)head_;
-
+		
 		while (tmp_thread) {
 			if (tmp_thread->type() == NodeType::thread)
-				if (tmp_thread->type() == NodeType::thread && ((Thread*)tmp_thread)->parentpid() == parentPID)
-					count++;
+			if (tmp_thread->type() == NodeType::thread && ((Thread*)tmp_thread)->parentpid() == parentPID)
+				count++;
 			tmp_thread = (Base*)tmp_thread->pnext();
 		}
 		return count;
