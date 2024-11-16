@@ -1,6 +1,4 @@
-﻿#include <type_traits>
-
-#include "inc/Subj.hpp"
+﻿#include "inc/Subj.hpp"
 
 namespace SubJList {
 	using namespace LinkedList;
@@ -84,16 +82,15 @@ namespace SubJList {
 	}
 
 	int SubjList::count_child_threads(int parentPID) const{
-		if (!head_) {
-			return 0;
-		}
-
 		int count = 0;
-		Thread* tmp_thread = (Thread*)head_;
-		while (!tmp_thread) {
-			if (tmp_thread->parentpid() == parentPID)
-				count++;
-			tmp_thread = (Thread*)tmp_thread->pnext();
+
+		Base* tmp_thread = (Base*)head_;
+
+		while (tmp_thread) {
+			if (tmp_thread->type() == NodeType::thread)
+				if (tmp_thread->type() == NodeType::thread && ((Thread*)tmp_thread)->parentpid() == parentPID)
+					count++;
+			tmp_thread = (Base*)tmp_thread->pnext();
 		}
 		return count;
 	}

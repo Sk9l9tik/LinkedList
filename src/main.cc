@@ -2,7 +2,6 @@
 * @brief main file
 * 
 * @author Belosheev A.D.
-* @date 15.11.24
 */
 
 #include "inc/Subj.hpp"
@@ -115,6 +114,7 @@ void menu() {
 
 		case(0):
 			ii = 0;
+			temp_list->clear();
 			delete temp_list;
 			break;
 		}
@@ -124,26 +124,6 @@ void menu() {
 int main(){
 	
 	menu();
-
-#if 0
-	//List a;
-	//Node* a1 = a.add(List::create());
-	//Node* a2 = a.add(List::create());
-	Base* temp_process = Base::create(NodeType::process);
-
-	//a.print();
-	std::cout << "---\n";
-
-	
-	temp_process->print();
-
-	//a.swap_node(a1, a2);
-
-	//a.print();
-
-	std::cout << "---\n";
-
-#endif
 	return 0;
 }
 
