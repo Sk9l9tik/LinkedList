@@ -6,7 +6,6 @@
 
 #include "inc/Subj.hpp"
 #include <cstdlib>
-#include <list>
 
 using namespace LinkedList;
 using namespace SubJList;
