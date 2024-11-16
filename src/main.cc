@@ -70,17 +70,12 @@ void menu() {
 
 				if (numb == 1) {
 					new_node = temp_list->create(NodeType::process);
-					//new_node = Base::create(NodeType::process);
-					//new_node->input();
 
 					system("cls");
 					break;
 				}
 				else if (numb == 2) {
 					new_node = temp_list->create(NodeType::thread);
-					
-					/*new_node = Base::create(NodeType::thread);
-					new_node->input();*/
 
 					system("cls");
 					break;
